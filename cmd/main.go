@@ -22,6 +22,7 @@ func main() {
 	c, err := config.New()
 	if err != nil {
 		logger.Error(err.Error())
+		return
 	}
 
 	if _, err := server.Run(c.Host, logger); err != nil {

@@ -4,7 +4,7 @@ tasks:
     run:
       desc: run command
       cmds:
-        - go run ./cmd
+        - wgo run ./cmd
 
     build:
       desc: build

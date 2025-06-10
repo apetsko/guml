@@ -16,7 +16,7 @@ import (
 func Run(addr string, logger *slog.Logger) (*http.Server, error) {
 	srv := &http.Server{
 		Addr:              addr,
-		Handler:           router(),
+		Handler:           router(logger),
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 
@@ -44,12 +44,12 @@ func Run(addr string, logger *slog.Logger) (*http.Server, error) {
 	return srv, nil
 }
 
-func router() http.Handler {
+func router(logger *slog.Logger) http.Handler {
 	r := chi.NewRouter()
 	r.Route("/uml", func(r chi.Router) {
-		r.Get("/index", handlers.Index)
-		r.Post("/upload", handlers.Upload)
-		r.Get("/", handlers.Link)
+		r.Get("/index", handlers.Index(logger))
+		r.Post("/upload", handlers.Upload(logger))
+		r.Get("/", handlers.Link(logger))
 	})
 	return r
 }
