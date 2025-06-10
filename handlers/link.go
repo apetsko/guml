@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"oss.terrastruct.com/d2/d2graph"
@@ -15,10 +16,22 @@ import (
 	"oss.terrastruct.com/util-go/go2"
 )
 
-func Upload(w http.ResponseWriter, r *http.Request) {
+func Link(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		UML string `json:"uml"`
+		UML string `json:"link"`
 	}
+
+	link := r.URL.Query().Get("link")
+	fmt.Println(link)
+	client := http.Client{}
+	resp, err := client.Get("https://google.com")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+
+	return
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
 		return

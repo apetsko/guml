@@ -2,26 +2,29 @@ package main
 
 import (
 	"context"
-	"d2/handlers"
-	"d2/server"
-	"fmt"
+
 	"log"
 	"log/slog"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/apetsko/guml/config"
+	"github.com/apetsko/guml/server"
 )
 
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 	defer cancel()
 
-	logger := slog.NewJSONHandler(os.Stdout, nil)
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
-	if _, err := server.Run(logger); err != nil {
+	c, err := config.New()
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	if _, err := server.Run(c.Host, logger); err != nil {
 		log.Fatal("HTTP server failed: " + err.Error())
 	}
 

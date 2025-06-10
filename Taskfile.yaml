@@ -1,0 +1,12 @@
+version: 3
+
+tasks:
+    run:
+      desc: run command
+      cmds:
+        - go run ./cmd
+
+    build:
+      desc: build
+      cmds:
+        - go build -o ./cmd/bin/ ./cmd/

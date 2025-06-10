@@ -2,14 +2,13 @@ package server
 
 import (
 	"context"
-	"d2/handlers"
+
 	"errors"
-	"fmt"
-	"log"
 	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/apetsko/guml/handlers"
 	"github.com/go-chi/chi/v5"
 	"golang.org/x/sync/errgroup"
 )
@@ -23,6 +22,7 @@ func Run(addr string, logger *slog.Logger) (*http.Server, error) {
 
 	g, ctx := errgroup.WithContext(context.Background())
 
+	logger.Info("Running server on " + addr)
 	g.Go(func() error {
 		<-ctx.Done()
 		five := 5 * time.Second
@@ -47,8 +47,9 @@ func Run(addr string, logger *slog.Logger) (*http.Server, error) {
 func router() http.Handler {
 	r := chi.NewRouter()
 	r.Route("/uml", func(r chi.Router) {
-		r.HandleFunc("/", handlers.Index)
-		r.HandleFunc("/upload", handlers.Upload)
+		r.Get("/index", handlers.Index)
+		r.Post("/upload", handlers.Upload)
+		r.Get("/", handlers.Link)
 	})
 	return r
 }
